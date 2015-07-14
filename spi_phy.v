@@ -10,7 +10,7 @@ ______________  \/  \/ | \/ | ______________
 --English Description:
 	
 --Version:VERA.1.0.0
---Data modified:
+--Data modified:2015/7/14 17:53:05
 --author:Young-ÎâÃ÷
 --E-mail: wmy367@Gmail.com
 --Data created:
@@ -95,44 +95,62 @@ rx_8bit_from_phy rx_8bit_from_phy_inst(
 /*	output		*/	.stream_eof     (rx_stream_eof  )
 );
    			           	
-wire		tx_data  			;       	
-wire		tx_valid        	;
-wire		can_ref_new_data	;
-wire[23:0]	trigger_cnt		    ;
-wire		idle            	;
+//wire		tx_data  			;       	
+//wire		tx_valid        	;
+//wire		can_ref_new_data	;
+//wire[23:0]	trigger_cnt		    ;
+//wire		idle            	;
 
-tx_bit1_phy #(
-	.PHASE			(PHASE			),	 
-	.ACTIVE			(ACTIVE	        )
-)tx_bit1_phy_inst(
+//tx_bit1_phy #(
+//	.PHASE			(PHASE			),	 
+//	.ACTIVE			(ACTIVE	        )
+//)tx_bit1_phy_inst(
+//	//-->> SPI INTERFACE <<---
+///*	input		*/	.sck				(sck				),						
+///*	input		*/	.cs_n        		(cs_n		        ),
+///*	output		*///	.miso        		(miso		        ),
+//	//--<< SPI INTERFACE >>---
+///*	input		*/	.clock     			(clock   			),  						
+///*	input		*/	.rst_n           	(rst_n           	),        
+///*	input		*/	.tx_data         	(tx_data         	),        
+///*	input		*/	.tx_valid        	(tx_valid        	),        
+///*	output		*/	.can_ref_new_data	(can_ref_new_data	),		
+///*	output[23:0]*/	.trigger_cnt		(trigger_cnt		),		
+///*	output		*/	.idle            	(idle            	)
+//);
+//
+//tx_8bit_to_phy tx_8bit_to_phy_inst(
+///*	input		*/	.clock     			(clock 				),    					
+///*	input		*/	.rst_n              (rst_n              ),
+///*	output		*/	.tx_data            (tx_data            ),
+///*	output		*/	.tx_valid           (tx_valid           ),
+///*	input		*/	.can_ref_new_data	(can_ref_new_data	),
+///*	input [23:0]*/	.trigger_cnt		(trigger_cnt		),
+///*	input		*/	.idle				(idle				),
+//	//---->>  <<-----
+///*	output		*/	//.send_flag			(tx_send_flag		),		
+///*	input [23:0]*/	.send_momment		(tx_send_momment	),
+///*	input [7:0]	*/	.send_data			(tx_send_data		),
+///*	input		*/	.send_valid			(tx_send_valid		)	
+///*	output		*/	//.empty			    (tx_empty			)
+//);
+
+tx_8bit_phy #(
+	.PHASE			(PHASE			),	
+	.ACTIVE			(ACTIVE	        )   
+)tx_8bit_phy(
 	//-->> SPI INTERFACE <<---
-/*	input		*/	.sck				(sck				),						
-/*	input		*/	.cs_n        		(cs_n		        ),
-/*	output		*/	.miso        		(miso		        ),
+/*	input		*/	.sck				(sck				),		
+/*	input		*/	.cs_n        		(cs_n		        ),      
+/*	output		*/	.miso        		(miso		        ),      
 	//--<< SPI INTERFACE >>---
-/*	input		*/	.clock     			(clock   			),  						
-/*	input		*/	.rst_n           	(rst_n           	),        
-/*	input		*/	.tx_data         	(tx_data         	),        
-/*	input		*/	.tx_valid        	(tx_valid        	),        
-/*	output		*/	.can_ref_new_data	(can_ref_new_data	),		
-/*	output[23:0]*/	.trigger_cnt		(trigger_cnt		),		
-/*	output		*/	.idle            	(idle            	)
-);
-
-tx_8bit_to_phy tx_8bit_to_phy_inst(
-/*	input		*/	.clock     			(clock 				),    					
-/*	input		*/	.rst_n              (rst_n              ),
-/*	output		*/	.tx_data            (tx_data            ),
-/*	output		*/	.tx_valid           (tx_valid           ),
-/*	input		*/	.can_ref_new_data	(can_ref_new_data	),
-/*	input [23:0]*/	.trigger_cnt		(trigger_cnt		),
-/*	input		*/	.idle				(idle				),
-	//---->>  <<-----
-/*	output		*/	.send_flag			(tx_send_flag		),		
+/*	input		*/	.clock     			(clock   			), 
+/*	input		*/	.rst_n           	(rst_n           	), 
+/*	output		*/	.send_flag			(tx_send_flag		),
 /*	input [23:0]*/	.send_momment		(tx_send_momment	),
 /*	input [7:0]	*/	.send_data			(tx_send_data		),
-/*	input		*/	.send_valid			(tx_send_valid		),	
-/*	output		*/	.empty			    (tx_empty			)
+/*	input		*/	.send_valid			(tx_send_valid		),
+/*	output		*/	.empty			    (tx_empty			) 
 );
 
 

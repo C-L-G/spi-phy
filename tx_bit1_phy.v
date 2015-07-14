@@ -10,13 +10,12 @@ ______________  \/  \/ | \/ | ______________
 --English Description:
 	
 --Version:VERA.1.0.0
---Data modified:
+--Data modified:2015/7/14 17:54:33
 --author:Young-ÎâÃ÷
 --E-mail: wmy367@Gmail.com
 --Data created:
 ________________________________________________________
 ********************************************************/
-`timescale 1ns/1ps
 module tx_bit1_phy #(
 	parameter	PHASE	= 0,
 	parameter	ACTIVE	= 0
@@ -67,7 +66,8 @@ always@(posedge clock,negedge rst_n)
 	else		write_flag	<= ~trigger_flag;
 
 always@(posedge trigger_clock)
-	tri_data	<= wr_data;
+	//tri_data	<= wr_data;
+	tri_data	<= tx_data;
 
 always@(posedge trigger_clock)
 	trigger_flag<= ~trigger_flag;
@@ -76,8 +76,14 @@ reg	[23:0]	counter;
 always@(posedge trigger_clock,negedge trigger_rst_n)
 	if(~trigger_rst_n)	counter	<= 24'd0;
 	else				counter	<= counter + 1'b1;
+//---->> DEBUG HERE <<--------------------
+reg			post_sck;
+always@(posedge clock)
+	post_sck	<= sck;
 
-assign	can_ref_new_data	= trigger_flag != write_flag;
+//assign	can_ref_new_data	= trigger_flag != write_flag;
+assign		can_ref_new_data	= (ACTIVE==1)? (!post_sck & sck) : (post_sck & !sck);
+//----<< DEBUG HERE >>--------------------
 //assign	miso				= (PHASE	== 0)? tx_data : tri_data;
 assign	trigger_cnt			= counter;
 assign	idle				= cs_n;
