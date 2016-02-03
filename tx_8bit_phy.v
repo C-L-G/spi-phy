@@ -1,21 +1,13 @@
-/*******************************************************
+/****************************************
 ______________                ______________
 ______________ \  /\  /|\  /| ______________
 ______________  \/  \/ | \/ | ______________
-
---Module Name:
---Project Name:
---Chinese Description:
-	
---English Description:
-	
---Version:VERA.1.0.0
---Data modified:2015/7/14 17:54:00
+--Module Name:  tx_8bit_phy.v
+--Project Name: spi-phy
+--Data modified: 2016-02-03 15:44:39 +0800
 --author:Young-ÎâÃ÷
 --E-mail: wmy367@Gmail.com
---Data created:
-________________________________________________________
-********************************************************/
+****************************************/
 `timescale 1ns/1ps
 module tx_8bit_phy #(
 	parameter	PHASE	= 0,
@@ -62,35 +54,75 @@ always@(*)
 //---->> YIELD BLOCK <<-----------
 reg	[23:0]	counter;
 always@(posedge trigger_clock,negedge trigger_rst_n)
-	if(~trigger_rst_n)	counter	<= 24'd1;
+	if(~trigger_rst_n)	counter	<= 24'd0;
 	else				counter	<= counter + 1'b1;
 
 reg						tx_yield;
 
-always@(posedge trigger_clock,negedge trigger_rst_n)
-	if(~trigger_rst_n)	
-				tx_yield	<= 1'b0;
-	else if(send_momment	< 24'd8)
+always@(posedge clock,negedge rst_n)
+	if(~rst_n)		tx_yield	<= 1'b0;
+	else if(cs_n)	tx_yield	<= 1'b0;
+	else if(send_momment	< 24'd4)
 				tx_yield	<= 1'b1;
-	else 		tx_yield	<= counter >= send_momment;
+	else 		tx_yield	<= counter >= send_momment | tx_yield;
 
 //----<< YIELD BLOCK >>-----------  
 //---->> TX DATA PRO <<-----------
+localparam	DRIVER_CLOCK	= "SPI_SCK" ; //SPI_SCK SYSTEM_CLK
 reg [2:0]	point;
+wire[7:0]	pre_data;
+reg [7:0]	data_reg; 
+generate
+if(DRIVER_CLOCK == "SPI_SCK")begin
+//---->> TRIGGER CLOCK <<---------
 always@(posedge trigger_clock,negedge trigger_rst_n)
 	if(~trigger_rst_n)	point	<= 3'd0;
 	else 				point	<= point + tx_yield;
 
-wire[7:0]	pre_data;
-reg [7:0]	data_reg;
-always@(posedge trigger_clock,negedge trigger_rst_n)
-	if(~trigger_rst_n)	data_reg	<= pre_data; 
+always@(posedge trigger_clock,negedge trigger_rst_n)    
+	if(~trigger_rst_n)
+						data_reg	<= pre_data; 
 	else if(!tx_yield)	data_reg	<= pre_data;
 	else begin
-		if(point == 3'b111)
+		if(point == 3'b111) 
 				data_reg	<= pre_data;
 		else	data_reg	<= data_reg;
 	end
+//----<< TRIGGER CLOCK >>---------
+end else begin
+//---->> SYSTEM CLOCK <<---------
+wire	sck_raising;
+wire	sck_falling;
+
+edge_generator #(
+	.MODE		("FAST"		)   // FAST NORMAL BEST
+)edge_generator_inst(
+	.clk		(clock			),
+	.rst_n      (rst_n			),
+	.in         (trigger_clock	),
+	.raising    (sck_raising	),
+	.falling    (sck_falling	)
+);
+always@(posedge clock,negedge rst_n)
+	if(~rst_n)		point	<= 3'd0;
+	else if(cs_n)	point	<= 3'd0;
+	else if(sck_raising)
+					point	<= point + tx_yield;
+	else			point	<= point;
+always@(posedge clock,negedge rst_n)
+	if(~rst_n)	data_reg	<= pre_data; 
+	else if(cs_n)
+				data_reg	<= pre_data;
+	else if(!tx_yield)	data_reg	<= pre_data;
+	else begin
+		if(point == 3'b111 && sck_raising) 
+				data_reg	<= pre_data;
+		else	data_reg	<= data_reg;
+	end
+//----<< SYSTEM CLOCK >>---------
+end
+endgenerate
+
 
 reg tx_reg;
 always@(posedge trigger_clock,negedge trigger_rst_n)

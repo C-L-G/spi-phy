@@ -1,21 +1,13 @@
-/*******************************************************
+/****************************************
 ______________                ______________
 ______________ \  /\  /|\  /| ______________
 ______________  \/  \/ | \/ | ______________
-
---Module Name:
---Project Name:
---Chinese Description:
-	
---English Description:
-	
---Version:VERA.1.0.0
---Data modified:
+--Module Name:  rx_8bit_from_phy.v
+--Project Name: spi-phy
+--Data modified: 2016-02-03 15:44:39 +0800
 --author:Young-ÎâÃ÷
 --E-mail: wmy367@Gmail.com
---Data created:
-________________________________________________________
-********************************************************/
+****************************************/
 `timescale 1ns/1ps
 module rx_8bit_from_phy (
 	input			clock   		,

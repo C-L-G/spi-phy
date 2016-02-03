@@ -2,14 +2,14 @@
 ______________                ______________
 ______________ \  /\  /|\  /| ______________
 ______________  \/  \/ | \/ | ______________
---Module Name:  spi_phy.v
+--Module Name:  spi_phy_verb.v
 --Project Name: spi-phy
 --Data modified: 2016-02-03 15:44:39 +0800
 --author:Young-ÎâÃ÷
 --E-mail: wmy367@Gmail.com
 ****************************************/
 `timescale 1ns/1ps
-module spi_phy #(
+module spi_phy_verb #(
 	parameter	PHASE	= 0,
 	parameter	ACTIVE	= 0
 )(
@@ -87,47 +87,8 @@ rx_8bit_from_phy rx_8bit_from_phy_inst(
 /*	output		*/	.stream_eof     (rx_stream_eof  )
 );
    			           	
-//wire		tx_data  			;       	
-//wire		tx_valid        	;
-//wire		can_ref_new_data	;
-//wire[23:0]	trigger_cnt		    ;
-//wire		idle            	;
 
-//tx_bit1_phy #(
-//	.PHASE			(PHASE			),	 
-//	.ACTIVE			(ACTIVE	        )
-//)tx_bit1_phy_inst(
-//	//-->> SPI INTERFACE <<---
-///*	input		*/	.sck				(sck				),						
-///*	input		*/	.cs_n        		(cs_n		        ),
-///*	output		*///	.miso        		(miso		        ),
-//	//--<< SPI INTERFACE >>---
-///*	input		*/	.clock     			(clock   			),  						
-///*	input		*/	.rst_n           	(rst_n           	),        
-///*	input		*/	.tx_data         	(tx_data         	),        
-///*	input		*/	.tx_valid        	(tx_valid        	),        
-///*	output		*/	.can_ref_new_data	(can_ref_new_data	),		
-///*	output[23:0]*/	.trigger_cnt		(trigger_cnt		),		
-///*	output		*/	.idle            	(idle            	)
-//);
-//
-//tx_8bit_to_phy tx_8bit_to_phy_inst(
-///*	input		*/	.clock     			(clock 				),    					
-///*	input		*/	.rst_n              (rst_n              ),
-///*	output		*/	.tx_data            (tx_data            ),
-///*	output		*/	.tx_valid           (tx_valid           ),
-///*	input		*/	.can_ref_new_data	(can_ref_new_data	),
-///*	input [23:0]*/	.trigger_cnt		(trigger_cnt		),
-///*	input		*/	.idle				(idle				),
-//	//---->>  <<-----
-///*	output		*/	//.send_flag			(tx_send_flag		),		
-///*	input [23:0]*/	.send_momment		(tx_send_momment	),
-///*	input [7:0]	*/	.send_data			(tx_send_data		),
-///*	input		*/	.send_valid			(tx_send_valid		)	
-///*	output		*/	//.empty			    (tx_empty			)
-//);
-
-tx_8bit_phy #(
+tx_8bit_fifo_phy #(
 	.PHASE			(PHASE			),	
 	.ACTIVE			(ACTIVE	        )   
 )tx_8bit_phy(
